@@ -55,6 +55,18 @@ class Parser(HTMLParser):
         global comments
         comments.append(data)
 
+def combine_percentage_with_previous(array):
+    result = []
+    i = 0
+    while i < len(array):
+        if array[i] == "%" and i > 0:
+            # Об'єднуємо з попереднім елементом
+            result[-1] = str(result[-1]) + "%"
+        else:
+            result.append(array[i])
+        i += 1
+    return result
+
 def hero(): # функцыя яка виводить масив який виводить данні про героїв
     global start_tags
     global end_tags
@@ -79,6 +91,7 @@ def hero(): # функцыя яка виводить масив який вив�
             table_endtindex = i
 
     new_array = numpy.split(all_data, [table_startindex, table_endtindex])[1] #масив в якому містяться данні про героїв
+    new_array = combine_percentage_with_previous(new_array)
     data_array = numpy.reshape(new_array, (-1, 4))
     logger.info(data_array)
     return data_array
